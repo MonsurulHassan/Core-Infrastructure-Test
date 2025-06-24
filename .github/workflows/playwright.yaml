@@ -1,0 +1,89 @@
+name: Core Infrastructure Test
+run-name: run automated playwright test on ${{ inputs.instance }}
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      instance:
+        description: Target instance
+        type: choice
+        required: true
+        options:
+          - stage
+          - test1
+          - test2
+jobs:
+  playwright-test:
+    timeout-minutes: 60
+    runs-on: dev-standard
+    steps:
+      - name: Setup curl, git
+        run: sudo apt-get update && sudo apt-get install curl git -y
+
+      - name: Checkout source @ ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Determine url prefix and env file
+        id: env-vars
+        run: |
+          instance="${{ inputs.instance }}"
+          case $instance in
+            stage)
+              echo "prefix=stg" >> "$GITHUB_OUTPUT"
+              echo "env_file=.env.stage" >> "$GITHUB_OUTPUT"
+              ;;
+            test1)
+              echo "prefix=t1" >> "$GITHUB_OUTPUT"
+              echo "env_file=.env.test1" >> "$GITHUB_OUTPUT"
+              ;;
+            test2)
+              echo "prefix=t2" >> "$GITHUB_OUTPUT"
+              echo "env_file=.env.test2" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
+      - name: Wait for test instance to be up and running
+        run: |
+          until $(curl --output /dev/null --silent --head --fail https://app.${{ steps.env-vars.outputs.prefix }}.ideascale.dev/a/sys/status); do
+            printf '.'
+            sleep 5
+          done
+      - name: Install dependencies
+        run: |
+          cd playwright
+          npm ci
+      - name: Install Playwright Browsers
+        run: |
+          cd playwright
+          npx playwright install --with-deps
+      - name: Load environment credentials
+        run: |
+          cd playwright
+          cp credentials/${{ steps.env-vars.outputs.env_file }} .env
+      - name: Run Playwright test
+        env:
+          TEST_ENV: ${{ inputs.instance }}
+        run: |
+          cd playwright
+          npm run test:workspace-landing-page
+      - name: Generate HTML report
+        if: always()
+        run: npx playwright show-report
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-test-report
+          path: playwright-report/
+          retention-days: 30

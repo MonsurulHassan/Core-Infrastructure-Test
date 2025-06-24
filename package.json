@@ -1,0 +1,26 @@
+{
+  "name": "core-infrastructure-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:local": "cross-env ENV=local npx playwright test",
+    "test:stage": "cross-env ENV=stage npx playwright test",
+    "test:test1": "cross-env ENV=test1 npx playwright test",
+    "test:test2": "cross-env ENV=test2 npx playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.14.0",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "axios": "^1.10.0",
+    "dotenv": "^16.5.0"
+  }
+}
