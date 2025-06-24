@@ -7,10 +7,7 @@ import { COMMUNITY, WORKSPACE } from "config";
 test.describe("smoke", () => {
 
   test.use({ storageState: ".auth/admin-panel-workspace-admin.json" });
-  test('should login as workspace admin', async ({ adminPanelWorkspaceHomePage, adminPanelPrivateCommunityHomePage, adminPanelPublicCommunityHomePage, page }) => {
-    await adminPanelWorkspaceHomePage.goTo();
-    expect(await adminPanelWorkspaceHomePage.isAtPage()).toBeTruthy();
-
+  test('should login to community as workspace admin', async ({ adminPanelPrivateCommunityHomePage, adminPanelPublicCommunityHomePage }) => {
     await adminPanelPrivateCommunityHomePage.goTo();
     expect(await adminPanelPrivateCommunityHomePage.isAtPage()).toBeTruthy();
 
