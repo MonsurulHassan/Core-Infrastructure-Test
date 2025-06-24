@@ -36,17 +36,5 @@ export class LoginPage extends BasePage {
       this.page.getByTestId("landing-page").waitFor({ state: "visible" }),
       this.page.getByTestId("community-home").waitFor({ state: "visible" }),
     ]);
-
-    // if (await workspaceTermsOfServiceAcceptancePage.isAtPage()) {
-    //   await (await workspaceTermsOfServiceAcceptancePage
-    //     .acceptTermsOfService(WorkspaceTermsOfServiceAcceptancePage))
-    //     .clickConfirmButton();
-    // }
-
-    // if (await communityTermsOfServiceAcceptancePage.isAtPage()) {
-    //   await (await communityTermsOfServiceAcceptancePage
-    //     .acceptTermsOfService(CommunityTermsOfServiceAcceptancePage))
-    //     .clickConfirmButton();
-    // }
   }
 }
