@@ -4,10 +4,10 @@ import { expect } from "@playwright/test";
 import { COMMUNITY, WORKSPACE } from "config";
 
 
-test.describe("admin-panel", () => {
-  
+test.describe("smoke", () => {
+
   test.use({ storageState: ".auth/admin-panel-workspace-admin.json" });
-  test('login as workspace admin in admin panel workspace', async ({ adminPanelWorkspaceHomePage, adminPanelPrivateCommunityHomePage, adminPanelPublicCommunityHomePage, page }) => {
+  test('should login as workspace admin', async ({ adminPanelWorkspaceHomePage, adminPanelPrivateCommunityHomePage, adminPanelPublicCommunityHomePage, page }) => {
     await adminPanelWorkspaceHomePage.goTo();
     expect(await adminPanelWorkspaceHomePage.isAtPage()).toBeTruthy();
 
@@ -19,7 +19,7 @@ test.describe("admin-panel", () => {
   });
 
   /* Multiple users test case */
-  test('login as workspace admin and regular member in admin panel private community', async ({ browser }) => {
+  test('should login as both workspace admin and regular member', async ({ browser }) => {
     // Workspace Admin
     const adminContext = await browser.newContext({
       storageState: '.auth/admin-panel-workspace-admin.json',
