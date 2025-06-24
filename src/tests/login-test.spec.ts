@@ -21,9 +21,9 @@ test.describe("smoke", () => {
     const adminContext = await browser.newContext({ storageState: '.auth/admin-panel-workspace-admin.json' });
     let page = await adminContext.newPage();
 
-    let adminPanelPrivateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
-    await adminPanelPrivateCommunityHomePage.goTo();
-    expect(adminPanelPrivateCommunityHomePage.isAtPage()).toBeTruthy();
+    let privateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
+    await privateCommunityHomePage.goTo();
+    expect(privateCommunityHomePage.isAtPage()).toBeTruthy();
 
     await adminContext.close();
 
@@ -31,9 +31,9 @@ test.describe("smoke", () => {
     const memberContext = await browser.newContext({ storageState: '.auth/admin-panel-private-community-regular-member.json' });
     page = await memberContext.newPage();
 
-    adminPanelPrivateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
-    await adminPanelPrivateCommunityHomePage.goTo();
-    expect(adminPanelPrivateCommunityHomePage.isAtPage()).toBeTruthy();
+    privateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
+    await privateCommunityHomePage.goTo();
+    expect(privateCommunityHomePage.isAtPage()).toBeTruthy();
 
     await memberContext.close();
   });
