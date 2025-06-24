@@ -21,9 +21,7 @@ test.describe("smoke", () => {
   /* Multiple users test case */
   test('should login as both workspace admin and regular member', async ({ browser }) => {
     // Workspace Admin
-    const adminContext = await browser.newContext({
-      storageState: '.auth/admin-panel-workspace-admin.json',
-    });
+    const adminContext = await browser.newContext({ storageState: '.auth/admin-panel-workspace-admin.json' });
     let page = await adminContext.newPage();
 
     let adminPanelPrivateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
@@ -33,9 +31,7 @@ test.describe("smoke", () => {
     await adminContext.close();
 
     // Community Regular Member
-    const memberContext = await browser.newContext({
-      storageState: '.auth/admin-panel-private-community-regular-member.json',
-    });
+    const memberContext = await browser.newContext({ storageState: '.auth/admin-panel-private-community-regular-member.json' });
     page = await memberContext.newPage();
 
     adminPanelPrivateCommunityHomePage = new CommunityHomePage(page, WORKSPACE.ADMIN_PANEL, COMMUNITY.ADMIN_PANEL_PRIVATE);
