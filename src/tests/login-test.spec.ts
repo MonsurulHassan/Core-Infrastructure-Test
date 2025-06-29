@@ -1,6 +1,6 @@
 import { test } from "@fixtures/page-fixtures";
 import { expect } from "@playwright/test";
-import { credential } from "@utils/credential-context";
+import { currentCredential } from "@utils/credential-context";
 
 const WORKSPACE_ADMIN_1 = 'ADMIN_PANEL_WORKSPACE_ADMIN_1';
 const WORKSPACE_ADMIN_2 = 'ADMIN_PANEL_WORKSPACE_ADMIN_2';
@@ -16,7 +16,7 @@ test.describe("smoke", () => {
     await workspaceHomePage.goTo();
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
-    let communityHomePage = await communityHomePageWithAuth(credential());
+    let communityHomePage = await communityHomePageWithAuth(currentCredential());
     await communityHomePage.goTo();
     expect(await communityHomePage.isAtPage()).toBeTruthy();
 
@@ -24,7 +24,7 @@ test.describe("smoke", () => {
     await workspaceHomePage.goTo();
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
-    communityHomePage = await communityHomePageWithAuth(credential());
+    communityHomePage = await communityHomePageWithAuth(currentCredential());
     await communityHomePage.goTo();
     expect(await communityHomePage.isAtPage()).toBeTruthy();
   });
