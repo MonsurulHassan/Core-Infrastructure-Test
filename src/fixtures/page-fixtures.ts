@@ -1,6 +1,9 @@
 import { CommunityHomePage } from "@pages/community/community-home-page";
+import { WorkspaceInfoPage } from "@pages/workspace/manage-workspace/workspace-general-settings/workspace-info/workspace-info-page";
 import { WorkspaceHomePage } from "@pages/workspace/workspace-home-page";
-import { test as base } from "@playwright/test";
+import { test as base, Page } from "@playwright/test";
+import { setCredential } from "@utils/credential-context";
+import { loadCredential } from "@utils/credentials";
 import * as dotenv from "dotenv";
 import * as path from "path";
 
@@ -11,25 +14,44 @@ else if (envArg === 'test1') envFile = 'credentials.test1.env';
 else if (envArg === 'test2') envFile = 'credentials.test2.env';
 dotenv.config({ path: path.resolve(__dirname, envFile) });
 
-type PageFixtures = {
-    adminPanelWorkspaceHomePage: WorkspaceHomePage;
-    adminPanelPrivateCommunityHomePage: CommunityHomePage;
-    adminPanelPublicCommunityHomePage: CommunityHomePage;
+type Credential = {
+  baseUrl: string;
+  communityKey?: string;
 };
 
+type PageFixtures = {
+  workspaceHomePageWithAuth: (credentialKey: string) => Promise<WorkspaceHomePage>;
+  workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WorkspaceInfoPage>;
+  communityHomePageWithAuth: (credentialKey: string) => Promise<CommunityHomePage>;
+};
+
+function createPageObject<T>(
+  createInstance: (page: Page, credential: Credential) => T
+) {
+  return async ({ browser }: any, use: (arg0: (credentialKey: string) => Promise<T>) => any) => {
+    const fn = async (credentialKey: string): Promise<T> => {
+      setCredential(credentialKey);
+      const credential = loadCredential(credentialKey);
+      const context = await browser.newContext({
+        storageState: `.auth/${credentialKey.toLowerCase().replace(/_/g, '-')}.json`
+      });
+      const page = await context.newPage();
+      return createInstance(page, credential);
+    };
+    await use(fn);
+  };
+}
+
 export const test = base.extend<PageFixtures>({
-    adminPanelWorkspaceHomePage: async ({ page }, use) => {
-        const adminPanelWorkspaceHomePage = new WorkspaceHomePage(page, process.env.ADMIN_PANEL_WORKSPACE_BASE_URL);
-        await use(adminPanelWorkspaceHomePage);
-    },
+  workspaceHomePageWithAuth: createPageObject(
+    (page, credential) => new WorkspaceHomePage(page, credential.baseUrl)
+  ),
 
-    adminPanelPrivateCommunityHomePage: async ({ page }, use) => {
-        const adminPanelPrivateCommunityHomePage = new CommunityHomePage(page, process.env.ADMIN_PANEL_WORKSPACE_BASE_URL, process.env.ADMIN_PANEL_PRIVATE_COMMUNITY_KEY);
-        await use(adminPanelPrivateCommunityHomePage);
-    },
+  workspaceInfoPageWithAuth: createPageObject(
+    (page, credential) => new WorkspaceInfoPage(page, credential.baseUrl)
+  ),
 
-    adminPanelPublicCommunityHomePage: async ({ page }, use) => {
-        const adminPanelPublicCommunityHomePage = new CommunityHomePage(page, process.env.ADMIN_PANEL_WORKSPACE_BASE_URL, process.env.ADMIN_PANEL_PUBLIC_COMMUNITY_KEY);
-        await use(adminPanelPublicCommunityHomePage);
-    },
+  communityHomePageWithAuth: createPageObject(
+    (page, credential) => new CommunityHomePage(page, credential.baseUrl, credential.communityKey)
+  ),
 });
