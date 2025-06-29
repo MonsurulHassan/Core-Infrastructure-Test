@@ -2,8 +2,11 @@ import { BasePage } from "@pages/base-page";
 import { Page } from "@playwright/test";
 
 export class CommunityHomePage extends BasePage {
+    private communityKey: string;
+
     constructor(page: Page, baseUrl: string, communityKey: string) {
-        super(page, baseUrl, communityKey);
+        super(page, baseUrl);
+        this.communityKey = communityKey;
     }
 
     async getPageId(): Promise<string> {

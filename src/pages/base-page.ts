@@ -3,13 +3,10 @@ import { Page } from "@playwright/test";
 export abstract class BasePage {
     readonly page: Page;
     readonly baseUrl: string;
-    readonly communityKey?: string;
 
-
-    protected constructor(page: Page, baseUrl: string, communityKey?: string) {
+    protected constructor(page: Page, baseUrl: string) {
         this.page = page;
         this.baseUrl = baseUrl;
-        this.communityKey = communityKey;
     }
 
     abstract getPageId(): Promise<string>;
