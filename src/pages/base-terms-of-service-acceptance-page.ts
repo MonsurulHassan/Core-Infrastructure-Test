@@ -4,18 +4,18 @@ import { Checkbox } from "@components/checkbox";
 import { Check } from "@enums/check";
 
 export abstract class BaseTermsOfServiceAcceptancePage extends BasePage {
-    constructor(page: Page) {
-        super(page);
+    constructor(page: Page, baseUrl: string) {
+        super(page, baseUrl);
     }
 
     abstract getPageId(): Promise<string>;
 
     abstract getPageUrl(): Promise<string>;
 
-    async acceptTermsOfService<T extends BaseTermsOfServiceAcceptancePage>(page: new (page: Page) => T): Promise<T> {
+    async acceptTermsOfService<T extends BaseTermsOfServiceAcceptancePage>(page: new (page: Page, baseUrl: string) => T): Promise<T> {
         const checkbox = this.page.locator('#terms-field');
         new Checkbox(this.page, checkbox).checkboxState(Check.CHECK);
-        return new page(this.page);
+        return new page(this.page, this.baseUrl);
     }
 
     async clickConfirmButton(): Promise<void> {

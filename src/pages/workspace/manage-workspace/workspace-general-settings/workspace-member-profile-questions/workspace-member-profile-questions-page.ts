@@ -5,8 +5,8 @@ import { Locator, Page } from "@playwright/test";
 export class WorkspaceMemberProfileQuestionsPage extends BasePage {
     private readonly workspaceMemberProfileQuestionsSection: Locator;
 
-    constructor(page: Page) {
-        super(page);
+    constructor(page: Page, baseUrl: string) {
+        super(page, baseUrl);
         this.workspaceMemberProfileQuestionsSection = page.locator("section:has(#anchor-member-fields)");
     }
 
@@ -16,11 +16,6 @@ export class WorkspaceMemberProfileQuestionsPage extends BasePage {
 
     async getPageUrl(): Promise<string> {
         return "/a/workspace-admin/basic-settings/member-fields";
-    }
-
-    async goTo(): Promise<void> {
-        await this.page.goto(await this.getPageUrl());
-        await this.page.getByTestId(await this.getPageId()).waitFor({ state: "visible" });
     }
 
     async getWorkspaceMemberProfileQuestionsSection(): Promise<WorkspaceMemberProfileQuestionsSection> {

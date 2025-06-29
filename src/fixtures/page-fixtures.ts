@@ -1,4 +1,5 @@
 import { CommunityHomePage } from "@pages/community/community-home-page";
+import { IdeaDetailsPage } from "@pages/community/idea-details-page";
 import { WorkspaceInfoPage } from "@pages/workspace/manage-workspace/workspace-general-settings/workspace-info/workspace-info-page";
 import { WorkspaceHomePage } from "@pages/workspace/workspace-home-page";
 import { test as base, Page } from "@playwright/test";
@@ -23,6 +24,7 @@ type PageFixtures = {
   workspaceHomePageWithAuth: (credentialKey: string) => Promise<WorkspaceHomePage>;
   workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WorkspaceInfoPage>;
   communityHomePageWithAuth: (credentialKey: string) => Promise<CommunityHomePage>;
+  ideaDetailsPageWithAuth: (credentialKey: string) => Promise<IdeaDetailsPage>;
 };
 
 function createPageObject<T>(
@@ -54,4 +56,8 @@ export const test = base.extend<PageFixtures>({
   communityHomePageWithAuth: createPageObject(
     (page, credential) => new CommunityHomePage(page, credential.baseUrl, credential.communityKey)
   ),
+
+  ideaDetailsPageWithAuth: createPageObject(
+    (page, credential) => new IdeaDetailsPage(page, credential.baseUrl, credential.communityKey)
+  )
 });

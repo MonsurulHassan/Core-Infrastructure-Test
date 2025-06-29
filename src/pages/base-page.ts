@@ -13,9 +13,10 @@ export abstract class BasePage {
 
     abstract getPageUrl(): Promise<string>;
 
-    async goTo(): Promise<void> {
+    async goTo(): Promise<this> {
         await this.page.goto(await this.getPageUrl());
         await this.page.getByTestId(await this.getPageId()).waitFor({ state: "visible" });
+        return this;
     }
 
     async getCurrentPageId(): Promise<string> {
@@ -31,7 +32,7 @@ export abstract class BasePage {
         return currentPageId === expectedPageId;
     }
 
-    protected async acceptCookies(): Promise<void> {
+    async acceptCookies(): Promise<void> {
         const cookieConsentModal = this.page.locator(".cookie-consent-modal");
         if (await cookieConsentModal.isVisible()) {
             await this.page.getByRole("button", { name: "Accept" }).click();

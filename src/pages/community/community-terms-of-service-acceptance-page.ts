@@ -4,9 +4,9 @@ import { Page } from "@playwright/test";
 export class CommunityTermsOfServiceAcceptancePage extends BaseTermsOfServiceAcceptancePage {
     private readonly communityKey: string;
 
-    constructor(page: Page) {
-        super(page);
-        this.communityKey = process.env.COMMUNITY_KEY;
+    constructor(page: Page, baseUrl: string, communityKey: string) {
+        super(page, baseUrl);
+        this.communityKey = communityKey;
     }
 
     async getPageId(): Promise<string> {

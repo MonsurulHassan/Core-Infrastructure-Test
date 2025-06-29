@@ -13,19 +13,19 @@ test.describe("smoke", () => {
     communityHomePageWithAuth
   }) => {
     let workspaceHomePage = await workspaceHomePageWithAuth(WORKSPACE_ADMIN_1);
-    await workspaceHomePage.goTo();
+    workspaceHomePage = await workspaceHomePage.goTo();
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
     let communityHomePage = await communityHomePageWithAuth(currentCredential());
-    await communityHomePage.goTo();
+    communityHomePage = await communityHomePage.goTo();
     expect(await communityHomePage.isAtPage()).toBeTruthy();
 
     workspaceHomePage = await workspaceHomePageWithAuth(PRIVATE_COMMUNITY_REGULAR_MEMBER_71);
-    await workspaceHomePage.goTo();
+    workspaceHomePage = await workspaceHomePage.goTo();
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
     communityHomePage = await communityHomePageWithAuth(currentCredential());
-    await communityHomePage.goTo();
+    communityHomePage = await communityHomePage.goTo();
     expect(await communityHomePage.isAtPage()).toBeTruthy();
   });
 });
