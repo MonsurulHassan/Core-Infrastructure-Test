@@ -8,7 +8,7 @@ const PRIVATE_COMMUNITY_REGULAR_MEMBER_71 = 'ADMIN_PANEL_WORKSPACE_PRIVATE_COMMU
 const PUBLIC_COMMUNITY_REGULAR_MEMBER_72 = 'ADMIN_PANEL_WORKSPACE_PUBLIC_COMMUNITY_REGULAR_MEMBER_72';
 
 test.describe("smoke", () => {
-  test('should log in to the workspace and community home pages', async ({
+  test('should log in to workspace and community home pages', async ({
     workspaceHomePageWithAuth,
     communityHomePageWithAuth
   }) => {
@@ -27,5 +27,15 @@ test.describe("smoke", () => {
     communityHomePage = await communityHomePageWithAuth(currentCredential());
     communityHomePage = await communityHomePage.goTo();
     expect(await communityHomePage.isAtPage()).toBeTruthy();
+  });
+});
+
+test.describe("admin-panel", () => {
+  test('should go to workspace info page', async ({
+    workspaceInfoPageWithAuth
+  }) => {
+    let workspaceInfoPage = await workspaceInfoPageWithAuth(WORKSPACE_ADMIN_2);
+    workspaceInfoPage = await workspaceInfoPage.goTo();
+    expect(await workspaceInfoPage.isAtPage()).toBeTruthy();
   });
 });
