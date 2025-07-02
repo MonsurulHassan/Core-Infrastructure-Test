@@ -1,16 +1,16 @@
-import { Page } from "@playwright/test";
 import { BasePage } from "@pages/base-page";
+import { Page } from "@playwright/test";
 
 export class WorkspaceInfoPage extends BasePage {
-    constructor(page: Page, baseUrl: string) {
-        super(page, baseUrl);
+    constructor(page: Page) {
+        super(page);
     }
 
-    async getPageId(): Promise<string> {
+    getPageId(): string {
         return "workspace-info";
     }
 
-    async getPageUrl(): Promise<string> {
+    getPageUrl(): string {
         return this.baseUrl + "/a/workspace-admin/basic-settings/global";
     }  
 }

@@ -1,8 +1,9 @@
 import { LoginPage } from "@pages/login-page";
 import { Page, test as setup } from "@playwright/test";
+import { loadCredential } from "@utils/credentials";
+import { goTo } from "@utils/navigation";
 import * as dotenv from "dotenv";
 import * as path from "node:path";
-import { loadCredential } from "./credentials";
 
 const envArg = process.env.ENV || 'local';
 let envFile = 'credentials.env';
@@ -35,8 +36,8 @@ async function authenticateUser({
   password: string;
   storageStatePath: string;
 }) {
-  const loginPage = new LoginPage(page, baseUrl);
-  await loginPage.goTo();
+  const loginPage = new LoginPage(page).withBaseUrl(baseUrl);
+  await goTo(loginPage);
   await loginPage.login(email, password);
   await page.context().storageState({ path: storageStatePath });
 }

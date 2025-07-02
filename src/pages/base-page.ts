@@ -1,35 +1,42 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 export abstract class BasePage {
-    readonly page: Page;
-    readonly baseUrl: string;
+    page: Page;
+    baseUrl: string;
+    communityKey: string;
 
-    protected constructor(page: Page, baseUrl: string) {
+    constructor(page: Page) {
         this.page = page;
-        this.baseUrl = baseUrl;
     }
 
-    abstract getPageId(): Promise<string>;
+    abstract getPageId(): string;
 
-    abstract getPageUrl(): Promise<string>;
+    abstract getPageUrl(): string;
 
-    async goTo(): Promise<this> {
-        await this.page.goto(await this.getPageUrl());
-        await this.page.getByTestId(await this.getPageId()).waitFor({ state: "visible" });
+    withBaseUrl(baseUrl: string): this {
+        this.baseUrl = baseUrl;
+        return this;
+    }
+
+    withCommunityKey(communityKey: string): this {
+        this.communityKey = communityKey;
         return this;
     }
 
     async getCurrentPageId(): Promise<string> {
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('load');
+        await this.page.waitForLoadState('networkidle');
         const pageId = await this.page.locator("body").getAttribute("data-test-element-id");
         return pageId || "Page ID not found";
     }
 
     async isAtPage(): Promise<boolean> {
         const currentPageId = await this.getCurrentPageId();
-        const expectedPageId = await this.getPageId();
+        const expectedPageId = this.getPageId();
         return currentPageId === expectedPageId;
+    }
+
+    async isNotAtPage(): Promise<boolean> {
+        return !(await this.isAtPage());
     }
 
     async acceptCookies(): Promise<void> {

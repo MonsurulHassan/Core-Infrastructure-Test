@@ -1,16 +1,20 @@
 import { BasePage } from "@pages/base-page";
+import { CommunityHomePage } from "@pages/community/community-home-page";
+import { CommunityTermsOfServiceAcceptancePage } from "@pages/community/community-terms-of-service-acceptance-page";
+import { WorkspaceHomePage } from "@pages/workspace/workspace-home-page";
+import { WorkspaceTermsOfServiceAcceptancePage } from "@pages/workspace/workspace-terms-of-service-acceptance-page";
 import { Page } from "@playwright/test";
 
 export class LoginPage extends BasePage {
-  constructor(page: Page, baseUrl: string) {
-    super(page, baseUrl);
+  constructor(page: Page) {
+    super(page);
   }
 
-  async getPageId(): Promise<string> {
+  getPageId(): string {
     return "login-page";
   }
 
-  async getPageUrl(): Promise<string> {
+  getPageUrl(): string {
     return this.baseUrl + "/a/workspace/login";
   }
 
@@ -32,9 +36,16 @@ export class LoginPage extends BasePage {
     await this.fillPassword(password);
     await this.page.getByRole("button", { name: "Log in" }).click();
 
+    const workspaceTermsOfServiceAcceptancePage = new WorkspaceTermsOfServiceAcceptancePage(this.page);
+    const workspaceHomePage = new WorkspaceHomePage(this.page);
+    const communityTermsOfServiceAcceptancePage = new CommunityTermsOfServiceAcceptancePage(this.page);
+    const communityHomePage = new CommunityHomePage(this.page);
+
     await Promise.race([
-      this.page.getByTestId("landing-page").waitFor({ state: "visible" }),
-      this.page.getByTestId("community-home").waitFor({ state: "visible" }),
+      this.page.getByTestId(workspaceTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "visible" }),
+      this.page.getByTestId(workspaceHomePage.getPageId()).waitFor({ state: "visible" }),
+      this.page.getByTestId(communityTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "visible" }),
+      this.page.getByTestId(communityHomePage.getPageId()).waitFor({ state: "visible" })
     ]);
   }
 }

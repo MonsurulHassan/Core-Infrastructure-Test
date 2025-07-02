@@ -1,3 +1,4 @@
+import { BasePage } from "@pages/base-page";
 import { CommunityHomePage } from "@pages/community/community-home-page";
 import { IdeaDetailsPage } from "@pages/community/idea-details-page";
 import { WorkspaceInfoPage } from "@pages/workspace/manage-workspace/workspace-general-settings/workspace-info/workspace-info-page";
@@ -5,6 +6,7 @@ import { WorkspaceHomePage } from "@pages/workspace/workspace-home-page";
 import { test as base, Page } from "@playwright/test";
 import { setCredential } from "@utils/credential-context";
 import { loadCredential } from "@utils/credentials";
+import { goTo } from "@utils/navigation";
 import * as dotenv from "dotenv";
 import * as path from "path";
 
@@ -20,44 +22,45 @@ type Credential = {
   communityKey?: string;
 };
 
+type WithGoTo<T> = T & { goTo(): Promise<T> };
+
 type PageFixtures = {
-  workspaceHomePageWithAuth: (credentialKey: string) => Promise<WorkspaceHomePage>;
-  workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WorkspaceInfoPage>;
-  communityHomePageWithAuth: (credentialKey: string) => Promise<CommunityHomePage>;
-  ideaDetailsPageWithAuth: (credentialKey: string) => Promise<IdeaDetailsPage>;
+  workspaceHomePageWithAuth: (credentialKey: string) => Promise<WithGoTo<WorkspaceHomePage>>;
+  workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WithGoTo<WorkspaceInfoPage>>;
+  communityHomePageWithAuth: (credentialKey: string) => Promise<WithGoTo<CommunityHomePage>>;
+  ideaDetailsPageWithAuth: (credentialKey: string) => Promise<WithGoTo<IdeaDetailsPage>>;
 };
 
-function createPageObject<T>(
+function createPageObject<T extends BasePage>(
   createInstance: (page: Page, credential: Credential) => T
 ) {
-  return async ({ browser }: any, use: (arg0: (credentialKey: string) => Promise<T>) => any) => {
-    const fn = async (credentialKey: string): Promise<T> => {
+  return async ({ browser }: any, use: (fn: (credentialKey: string) => Promise<WithGoTo<T>>) => any) => {
+    const fn = async (credentialKey: string): Promise<WithGoTo<T>> => {
       setCredential(credentialKey);
       const credential = loadCredential(credentialKey);
       const context = await browser.newContext({
-        storageState: `.auth/${credentialKey.toLowerCase().replace(/_/g, '-')}.json`
+        storageState: `.auth/${credentialKey.toLowerCase().replace(/_/g, "-")}.json`,
       });
       const page = await context.newPage();
-      return createInstance(page, credential);
+      const instance = createInstance(page, credential);
+
+      (instance as WithGoTo<T>).goTo = async function () {
+        return await goTo(this);
+      };
+      return instance as WithGoTo<T>;
     };
     await use(fn);
   };
 }
 
 export const test = base.extend<PageFixtures>({
-  workspaceHomePageWithAuth: createPageObject(
-    (page, credential) => new WorkspaceHomePage(page, credential.baseUrl)
-  ),
+  workspaceHomePageWithAuth: createPageObject((page, credential) => new WorkspaceHomePage(page).withBaseUrl(credential.baseUrl)),
 
-  workspaceInfoPageWithAuth: createPageObject(
-    (page, credential) => new WorkspaceInfoPage(page, credential.baseUrl)
-  ),
+  workspaceInfoPageWithAuth: createPageObject((page, credential) => new WorkspaceInfoPage(page).withBaseUrl(credential.baseUrl)),
 
-  communityHomePageWithAuth: createPageObject(
-    (page, credential) => new CommunityHomePage(page, credential.baseUrl, credential.communityKey)
-  ),
+  communityHomePageWithAuth: createPageObject((page, credential) => new CommunityHomePage(page).withBaseUrl(credential.baseUrl).withCommunityKey(credential.communityKey)),
 
-  ideaDetailsPageWithAuth: createPageObject(
-    (page, credential) => new IdeaDetailsPage(page, credential.baseUrl, credential.communityKey)
-  )
+  ideaDetailsPageWithAuth: createPageObject((page, credential) => new IdeaDetailsPage(page).withBaseUrl(credential.baseUrl).withCommunityKey(credential.communityKey)),
 });
+
+export { expect } from "@playwright/test";

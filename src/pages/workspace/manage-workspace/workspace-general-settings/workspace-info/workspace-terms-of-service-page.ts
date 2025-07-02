@@ -1,12 +1,12 @@
-import { Page } from "@playwright/test";
 import { WorkspaceInfoPage } from "@pages/workspace/manage-workspace/workspace-general-settings/workspace-info/workspace-info-page";
+import { Page } from "@playwright/test";
 
 export class WorkspaceTermsOfServicePage extends WorkspaceInfoPage {
-    constructor(page: Page, baseUrl: string) {
-        super(page, baseUrl);
-    } 
+    constructor(page: Page) {
+        super(page);
+    }
 
-    async getPageUrl(): Promise<string> {
-        return (await super.getPageUrl()).concat("#anchor-settings-global-workspace-tos");
-    }  
+    getPageUrl(): string {
+        return super.getPageUrl().concat("#anchor-settings-global-workspace-tos");
+    }
 }

@@ -1,19 +1,22 @@
 import { BaseTermsOfServiceAcceptancePage } from "@pages/base-terms-of-service-acceptance-page";
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 
 export class CommunityTermsOfServiceAcceptancePage extends BaseTermsOfServiceAcceptancePage {
-    private readonly communityKey: string;
-
-    constructor(page: Page, baseUrl: string, communityKey: string) {
-        super(page, baseUrl);
-        this.communityKey = communityKey;
+    constructor(page: Page) {
+        super(page);
     }
 
-    async getPageId(): Promise<string> {
+    getPageId(): string {
         return "community-tos";
     }
 
-    async getPageUrl(): Promise<string> {
-        return `/c/${this.communityKey}/membership/tos`;
+    getPageUrl(): string {
+        return "/c/" + this.communityKey + "/membership/tos";
+    }
+
+    async clickConfirmButton(): Promise<void> {
+            await this.confirmButton.waitFor({ state: "visible" });
+            await this.confirmButton.click();
+            await expect.poll(() => this.isNotAtPage()).toBe(true);
     }
 }

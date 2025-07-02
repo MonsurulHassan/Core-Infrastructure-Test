@@ -5,24 +5,23 @@ import { Locator, Page } from "@playwright/test";
 export class WorkspaceMemberProfileQuestionsPage extends BasePage {
     private readonly workspaceMemberProfileQuestionsSection: Locator;
 
-    constructor(page: Page, baseUrl: string) {
-        super(page, baseUrl);
+    constructor(page: Page) {
+        super(page);
         this.workspaceMemberProfileQuestionsSection = page.locator("section:has(#anchor-member-fields)");
     }
 
-    async getPageId(): Promise<string> {
+    getPageId(): string {
         return "workspace-member-profile-questions";
     }
 
-    async getPageUrl(): Promise<string> {
+    getPageUrl(): string {
         return "/a/workspace-admin/basic-settings/member-fields";
     }
 
-    async getWorkspaceMemberProfileQuestionsSection(): Promise<WorkspaceMemberProfileQuestionsSection> {
+    getWorkspaceMemberProfileQuestionsSection(): WorkspaceMemberProfileQuestionsSection {
         return new WorkspaceMemberProfileQuestionsSection(
             this.page,
             this.workspaceMemberProfileQuestionsSection
         );
     }
-
 }
