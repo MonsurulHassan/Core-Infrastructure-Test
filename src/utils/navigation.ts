@@ -5,7 +5,7 @@ import { WorkspaceTermsOfServiceAcceptancePage } from "@pages/workspace/workspac
 export async function goTo<T extends BasePage>(page: T): Promise<T> {
   await page.page.goto(page.getPageUrl());
 
-  let workspaceTermsOfServiceAcceptancePage = new WorkspaceTermsOfServiceAcceptancePage(page.page);
+  const workspaceTermsOfServiceAcceptancePage = new WorkspaceTermsOfServiceAcceptancePage(page.page);
   if (await workspaceTermsOfServiceAcceptancePage.isAtPage()) {
     await (await workspaceTermsOfServiceAcceptancePage
       .acceptTermsOfService(workspaceTermsOfServiceAcceptancePage))
