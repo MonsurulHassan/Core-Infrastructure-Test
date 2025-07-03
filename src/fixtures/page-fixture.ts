@@ -53,12 +53,9 @@ function createPageObject<T extends BasePage>(
 
 export const test = base.extend<PageFixtures>({
   workspaceHomePageWithAuth: createPageObject((page, credential) => new WorkspaceHomePage(page).withBaseUrl(credential.baseUrl)),
-
   workspaceInfoPageWithAuth: createPageObject((page, credential) => new WorkspaceInfoPage(page).withBaseUrl(credential.baseUrl)),
-
   communityHomePageWithAuth: createPageObject((page, credential) => new CommunityHomePage(page).withBaseUrl(credential.baseUrl).withCommunityKey(credential.communityKey)),
-
-  ideaDetailsPageWithAuth: createPageObject((page, credential) => new IdeaDetailsPage(page).withBaseUrl(credential.baseUrl).withCommunityKey(credential.communityKey)),
+  ideaDetailsPageWithAuth: createPageObject((page, credential) => new IdeaDetailsPage(page).withBaseUrl(credential.baseUrl).withCommunityKey(credential.communityKey))
 });
 
 export { expect } from "@playwright/test";

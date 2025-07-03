@@ -1,4 +1,4 @@
-import { test } from "@fixtures/page-fixtures";
+import { test } from "@fixtures/page-fixture";
 import { expect } from "@playwright/test";
 import { currentCredential } from "@utils/credential-context";
 import { goTo } from "@utils/navigation";
