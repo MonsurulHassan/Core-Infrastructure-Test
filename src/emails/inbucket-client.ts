@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Email, EmailSummary } from './email-types';
+import { Email, EmailSummary } from '@emails/email-types';
 
 export class InbucketClient {
   constructor(private baseUrl: string) { }

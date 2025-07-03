@@ -1,5 +1,5 @@
-import { InbucketClient } from '../inbucket-client';
-import { Email, EmailSummary } from '../email-types';
+import { InbucketClient } from '@emails/inbucket-client';
+import { Email, EmailSummary } from '@emails/email-types';
 import axios from 'axios';
 
 export class EmailService {

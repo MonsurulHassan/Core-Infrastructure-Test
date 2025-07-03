@@ -1,5 +1,5 @@
-import { EmailService } from './email-service';
-import { EmailSummary } from '../email-types';
+import { EmailService } from '@emails/email-services/email-service';
+import { EmailSummary } from '@emails/email-types';
 
 export class AccountVerificationEmailService extends EmailService {
   constructor() {
