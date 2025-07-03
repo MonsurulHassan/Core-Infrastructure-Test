@@ -24,8 +24,8 @@ export abstract class BasePage {
     }
 
     async getCurrentPageId(): Promise<string> {
-        await this.page.waitForLoadState('networkidle');
-        const pageId = await this.page.locator("body").getAttribute("data-test-element-id");
+        await this.page.waitForSelector("body[data-test-element-id]", { state: 'attached' });
+        const pageId = (await this.page.locator("body").getAttribute("data-test-element-id"));
         return pageId || "Page ID not found";
     }
 

@@ -6,7 +6,6 @@ import { WorkspaceHomePage } from "@pages/workspace/workspace-home-page";
 import { test as base, Page } from "@playwright/test";
 import { setCredential } from "@utils/credential-context";
 import { loadCredential } from "@utils/credentials";
-import { goTo } from "@utils/navigation";
 import * as dotenv from "dotenv";
 import * as path from "path";
 
@@ -22,33 +21,32 @@ type Credential = {
   communityKey?: string;
 };
 
-type WithGoTo<T> = T & { goTo(): Promise<T> };
-
 type PageFixtures = {
-  workspaceHomePageWithAuth: (credentialKey: string) => Promise<WithGoTo<WorkspaceHomePage>>;
-  workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WithGoTo<WorkspaceInfoPage>>;
-  communityHomePageWithAuth: (credentialKey: string) => Promise<WithGoTo<CommunityHomePage>>;
-  ideaDetailsPageWithAuth: (credentialKey: string) => Promise<WithGoTo<IdeaDetailsPage>>;
+  workspaceHomePageWithAuth: (credentialKey: string) => Promise<WorkspaceHomePage>;
+  workspaceInfoPageWithAuth: (credentialKey: string) => Promise<WorkspaceInfoPage>;
+  communityHomePageWithAuth: (credentialKey: string) => Promise<CommunityHomePage>;
+  ideaDetailsPageWithAuth: (credentialKey: string) => Promise<IdeaDetailsPage>;
 };
 
 function createPageObject<T extends BasePage>(
   createInstance: (page: Page, credential: Credential) => T
 ) {
-  return async ({ browser }: any, use: (fn: (credentialKey: string) => Promise<WithGoTo<T>>) => any) => {
-    const fn = async (credentialKey: string): Promise<WithGoTo<T>> => {
+  return async (
+    { browser }: { browser: any },
+    use: (fn: (credentialKey: string) => Promise<T>) => Promise<void>
+  ) => {
+    const fn = async (credentialKey: string): Promise<T> => {
       setCredential(credentialKey);
       const credential = loadCredential(credentialKey);
+
       const context = await browser.newContext({
         storageState: `.auth/${credentialKey.toLowerCase().replace(/_/g, "-")}.json`,
       });
-      const page = await context.newPage();
-      const instance = createInstance(page, credential);
 
-      (instance as WithGoTo<T>).goTo = async function () {
-        return await goTo(this);
-      };
-      return instance as WithGoTo<T>;
+      const page = await context.newPage();
+      return createInstance(page, credential);
     };
+
     await use(fn);
   };
 }

@@ -1,6 +1,7 @@
 import { test } from "@fixtures/page-fixtures";
 import { expect } from "@playwright/test";
 import { currentCredential } from "@utils/credential-context";
+import { goTo } from "@utils/navigation";
 
 const WORKSPACE_ADMIN_1 = 'ADMIN_PANEL_WORKSPACE_ADMIN_1';
 const WORKSPACE_ADMIN_2 = 'ADMIN_PANEL_WORKSPACE_ADMIN_2';
@@ -13,19 +14,19 @@ test.describe("smoke", () => {
     communityHomePageWithAuth
   }) => {
     let workspaceHomePage = await workspaceHomePageWithAuth(WORKSPACE_ADMIN_1);
-    await workspaceHomePage.goTo();
+    workspaceHomePage = await goTo(workspaceHomePage);
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
     let communityHomePage = await communityHomePageWithAuth(currentCredential());
-    await communityHomePage.goTo();
+    communityHomePage = await goTo(communityHomePage);
     expect(await communityHomePage.isAtPage()).toBeTruthy();
 
     workspaceHomePage = await workspaceHomePageWithAuth(PRIVATE_COMMUNITY_REGULAR_MEMBER_71);
-    await workspaceHomePage.goTo();
+    workspaceHomePage = await goTo(workspaceHomePage);
     expect(await workspaceHomePage.isAtPage()).toBeTruthy();
 
     communityHomePage = await communityHomePageWithAuth(currentCredential());
-    await communityHomePage.goTo();
+    communityHomePage = await goTo(communityHomePage);
     expect(await communityHomePage.isAtPage()).toBeTruthy();
   });
 });
@@ -35,7 +36,7 @@ test.describe("admin-panel", () => {
     workspaceInfoPageWithAuth
   }) => {
     let workspaceInfoPage = await workspaceInfoPageWithAuth(WORKSPACE_ADMIN_2);
-    await workspaceInfoPage.goTo();
+    workspaceInfoPage = await goTo(workspaceInfoPage);
     expect(await workspaceInfoPage.isAtPage()).toBeTruthy();
   });
 });
