@@ -19,6 +19,6 @@ export async function goTo<T extends BasePage>(page: T): Promise<T> {
       .clickConfirmButton();
   }
 
-  await page.page.getByTestId(page.getPageId()).waitFor({ state: "visible" });
+  await page.isAtPage();
   return page;
 }
