@@ -42,10 +42,10 @@ export class LoginPage extends BasePage {
     const communityHomePage = new CommunityHomePage(this.page);
 
     await Promise.race([
-      this.page.getByTestId(workspaceTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "visible" }),
-      this.page.getByTestId(workspaceHomePage.getPageId()).waitFor({ state: "visible" }),
-      this.page.getByTestId(communityTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "visible" }),
-      this.page.getByTestId(communityHomePage.getPageId()).waitFor({ state: "visible" })
+      this.page.getByTestId(workspaceTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "attached" }),
+      this.page.getByTestId(workspaceHomePage.getPageId()).waitFor({ state: "attached" }),
+      this.page.getByTestId(communityTermsOfServiceAcceptancePage.getPageId()).waitFor({ state: "attached" }),
+      this.page.getByTestId(communityHomePage.getPageId()).waitFor({ state: "attached" })
     ]);
   }
 }
